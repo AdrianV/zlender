@@ -1,0 +1,13 @@
+{
+  "name": "zlender",
+  "url" : "https://github.com/AdrianV/zlender/",
+  "license": "MIT",
+  "tags": ["compress", "uncompress"],
+  "description": "a data compression and uncompression library.",
+  "version": "0.0.1",
+  "releasenote": "Initial release.",
+  "contributors": ["Adrian"],
+  "dependencies": {
+  },
+  "classPath": "src"
+}
