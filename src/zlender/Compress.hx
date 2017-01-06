@@ -1,8 +1,9 @@
 package zlender;
 
+/*
+* based on the LZW algorithm. Implementation by Adrian Veith
+*/
 
-//import StringTools.hex;
-//import helper.bytes.FastArray;
 using haxe.Int32;
 using haxe.io.Bytes;
 using zlender.Word16;
@@ -15,11 +16,15 @@ enum CompressedBytesData {
 abstract CompressedBytes(CompressedBytesData) from CompressedBytesData to CompressedBytesData
 {
 	public var data(get, never): Bytes;
-	public inline function expand() return Compress.expand(this);
 	inline function get_data() return switch this {
 		case Compressed(c): return c;
 		case Original(o): return o;
 	};
+	public inline function expand() return Compress.expand(this);
+	public inline function isCompressed() : Bool return switch this {
+		case Compressed(_): true;
+		default: false;
+	}
 }
 
 enum ExpandErrors {
