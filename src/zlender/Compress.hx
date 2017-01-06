@@ -6,7 +6,6 @@ package zlender;
 
 using haxe.Int32;
 using haxe.io.Bytes;
-using zlender.Word16;
 
 enum CompressedBytesData {
 	Compressed(c: Bytes);
