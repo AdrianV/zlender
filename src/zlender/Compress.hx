@@ -45,6 +45,7 @@ class Compress
 	static inline var _empty: Int = 0;
 	#end
 
+#if false
 	static public inline function setI16(b: haxe.io.Bytes, pos: Int, v: Int): Void {
 		#if neko
 		v = v & 0xFFFF;
@@ -52,6 +53,7 @@ class Compress
 		b.set(pos, v & 0xFF);
 		b.set(pos +1, v >> 8);
 	}
+#end
 
 	static public inline function fastGetI16(b: haxe.io.BytesData, pos: Int): Int {
 		return b.fastGet(pos) | (b.fastGet(pos + 1) << 8);
@@ -64,7 +66,7 @@ class Compress
 		var trigger = 0x201;
 		var son = new haxe.ds.Vector<Int>(hash_size); 
 		var res = Bytes.alloc(data.length);
-		setI16(res, 2, data.length);
+		res.setUInt16(2, data.length);
 		var xOut = 4;
 		#if bigbuffer
 		var eOut = data.length - 512;
@@ -94,7 +96,7 @@ class Compress
 					if (xOut >= eOut) {
 						return Original(data);
 					}
-					setI16(res, xOut, bitbuffer >>> countbits);
+					res.setUInt16(xOut, bitbuffer >>> countbits);
 					xOut += 2;
 				}
 				if (freepos <= compress_size) {
@@ -118,18 +120,18 @@ class Compress
 				return Original(data);
 			}
 			#end
-			setI16(res, xOut, bitbuffer >>> countbits);
+			res.setUInt16(xOut, bitbuffer >>> countbits);
 			xOut += 2 ;
 		}
 		kx = xOut; 
 		if (countbits != 0) {
-			setI16(res, xOut, bitbuffer << (16-countbits));
+			res.setUInt16(xOut, bitbuffer << (16-countbits));
 			if (countbits <= 8) {
 			  kx++;
 			} else
 			  kx += 2;
 		}
-		setI16(res, 0, kx);
+		res.setUInt16(0, kx);
 		kx += (kx & 1);
 		var result = Bytes.alloc(kx);
 		result.blit(0, res, 0, kx);
@@ -147,6 +149,8 @@ class Compress
 				inline function getI16(i) {
 					#if hl
 					return bufIn.getUI16(i);
+					#elseif false
+					return data.getUInt16(i);
 					#else
 					return fastGetI16(bIn, i);
 					#end
