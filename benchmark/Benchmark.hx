@@ -58,11 +58,22 @@ class Benchmark {
         run(expanded = expandLoop(c, times), 'expand random data:', 'in $dur speed ${mb/dur} MB/s');
         trace(expanded.length);
         trace(expanded.compare(data));
-        #if (! js) 
+        #if (! (js || cs || hl)) 
         var cz: Bytes = null;
         run(cz = zcompressLoop(data, times), 'zip random data:', 'in $dur speed ${mb/dur} MB/s');
-        run(expanded = zexpandLoop(cz, times), 'unzip random data:', 'in $dur speed ${mb/dur} MB/s');
+        trace(cz.length);        
+        run(expanded = zexpandLoop(cz, times), 'unzip random data:', 'in $dur speed ${mb/dur} MB/s');   
         #end
+        var data = testtools.TxtNumbers.fillConst(100, 8192);
+        run(c = compressLoop(data, times), 'compress "100":', 'in $dur speed ${mb/dur} MB/s');
+        trace(c.data.length);
+        run(expanded = expandLoop(c, times), 'expand "100":', 'in $dur speed ${mb/dur} MB/s');
+        #if (! (js || cs || hl)) 
+        run(cz = zcompressLoop(data, times), 'zip "100":', 'in $dur speed ${mb/dur} MB/s');
+        trace(cz.length);        
+        run(expanded = zexpandLoop(cz, times), 'unzip "100":', 'in $dur speed ${mb/dur} MB/s');   
+        #end
+
     }
     
 }
