@@ -29,11 +29,17 @@ class Benchmark {
         return data;
     }
 
-    #if (! js) 
+	
+    #if (! (js || cs || hl))
+	
+	static inline function inflate(src: haxe.io.Bytes) {
+		return haxe.zip.InflateImpl.run(new haxe.io.BytesInput(src));
+	}
+	
     static function zcompressLoop(data: Bytes, count: Int) {
         var c: Bytes = null;
         for (i in 0... count) {
-            c = haxe.zip.Compress.run(data, 9);
+            c = haxe.zip.Compress.run(data, 1);
         }
         return c;
     }
@@ -42,6 +48,14 @@ class Benchmark {
         var data: Bytes = null;
         for (i in 0... count) {
             data = haxe.zip.Uncompress.run(c);
+        }
+        return data;
+    }
+	
+    static function zinflateLoop(c: Bytes, count: Int) {
+        var data: Bytes = null;
+        for (i in 0... count) {
+            data = inflate(c);
         }
         return data;
     }
@@ -63,6 +77,7 @@ class Benchmark {
         run(cz = zcompressLoop(data, times), 'zip random data:', 'in $dur speed ${mb/dur} MB/s');
         trace(cz.length);        
         run(expanded = zexpandLoop(cz, times), 'unzip random data:', 'in $dur speed ${mb/dur} MB/s');   
+        run(expanded = zinflateLoop(cz, times), 'inflate random data:', 'in $dur speed ${mb/dur} MB/s');   
         #end
         var data = testtools.TxtNumbers.fillConst(100, 8192);
         run(c = compressLoop(data, times), 'compress "100":', 'in $dur speed ${mb/dur} MB/s');
@@ -72,6 +87,7 @@ class Benchmark {
         run(cz = zcompressLoop(data, times), 'zip "100":', 'in $dur speed ${mb/dur} MB/s');
         trace(cz.length);        
         run(expanded = zexpandLoop(cz, times), 'unzip "100":', 'in $dur speed ${mb/dur} MB/s');   
+        run(expanded = zinflateLoop(cz, times), 'inflate "100":', 'in $dur speed ${mb/dur} MB/s');   
         #end
 
     }
