@@ -69,10 +69,12 @@ class Benchmark {
         run(c = compressLoop(data, times), 'compress random data:', 'in $dur speed ${mb/dur} MB/s');
         trace(c.data.length);
         var expanded: Bytes = null;
+        #if (! cppia)
         run(expanded = expandLoop(c, times), 'expand random data:', 'in $dur speed ${mb/dur} MB/s');
         trace(expanded.length);
         trace(expanded.compare(data));
-        #if (! (js || cs || hl)) 
+        #end
+        #if (! (js || cs || hl || lua)) 
         var cz: Bytes = null;
         run(cz = zcompressLoop(data, times), 'zip random data:', 'in $dur speed ${mb/dur} MB/s');
         trace(cz.length);        
@@ -83,7 +85,7 @@ class Benchmark {
         run(c = compressLoop(data, times), 'compress "100":', 'in $dur speed ${mb/dur} MB/s');
         trace(c.data.length);
         run(expanded = expandLoop(c, times), 'expand "100":', 'in $dur speed ${mb/dur} MB/s');
-        #if (! (js || cs || hl)) 
+        #if (! (js || cs || hl || lua)) 
         run(cz = zcompressLoop(data, times), 'zip "100":', 'in $dur speed ${mb/dur} MB/s');
         trace(cz.length);        
         run(expanded = zexpandLoop(cz, times), 'unzip "100":', 'in $dur speed ${mb/dur} MB/s');   
