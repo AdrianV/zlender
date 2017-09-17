@@ -56,7 +56,7 @@ with *const* data:
 
 |target|compression speed|decompression speed|zip   |unzip |inflate|
 |------|----------------:|------------------:|-----:|-----:|------:|
-|node js     |11.10 MB/sec |17.84 MB/sec     |
+|node js     |16.66 MB/sec |53.80 MB/sec     |
 |neko 32bit  |15.73 MB/sec |74.61 MB/sec     |28.33  |113.55|
 |luajit      |23.14 MB/sec |71.34 MB/sec
 |cpp (vcc 32)|134.80 MB/sec|284.02 MB/sec    |192.88 |125.09|59.37
