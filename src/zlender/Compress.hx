@@ -39,7 +39,7 @@ class Compress
 
 	static inline var compress_size = 2046;
 	static inline var hash_size = 16384;
-	#if (js || neko || php || python || lua)
+	#if (js || neko || php || python || lua || eval)
 	static inline var _empty: Int = null;
 	#else
 	static inline var _empty: Int = 0;
