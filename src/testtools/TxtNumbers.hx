@@ -36,15 +36,15 @@ class TxtNumbers
 			var h = n % 1000;
 			if (dig > 0) {
 			  if (h > 0) {
-				HundredsToText(dig);
-				result.add(" thousand ");
-				HundredsToText(h);
+					hundredsToText(dig);
+					result.add(" thousand ");
+					hundredsToText(h);
 			  } else {
-				HundredsToText(dig);
-				result.add(" thousand");
+					hundredsToText(dig);
+					result.add(" thousand");
 			  }	
 			} else {
-			  HundredsToText(h);
+			  hundredsToText(h);
 			}
 		} else {
 			result.add(Number1[0]);
@@ -52,7 +52,7 @@ class TxtNumbers
 		return result.toString();		
 	}
 	
-	function TensToText(dig: Int) {
+	function tensToText(dig: Int) {
 		if (dig > 0) {
 			if (dig >= 20) {
 				var x = dig % 10;
@@ -68,26 +68,26 @@ class TxtNumbers
 		}
 	}
 	
-	function HundredsToText(dig: Int) {
+	function hundredsToText(dig: Int) {
 		if (dig > 0) {
 		  var t = dig % 100;
 		  var h: Int = Math.floor(dig / 100);
 		  if (h > 0) {
 			if (t > 0) {
-			  TensToText(h);
+			  tensToText(h);
 			  result.add(" houndred ");
-			  TensToText(t);
+			  tensToText(t);
 			} else {
-			  TensToText(h);
+			  tensToText(h);
 			  result.add(" houndred");
 			}
 		  } else {
-			TensToText(t);
+				tensToText(t);
 		  }
 		}
 	}
 	
-	public static inline function NumberToText(n: Int): String {
+	public static inline function numberToText(n: Int): String {
 		return new TxtNumbers().doNumberToText(n);
 	}
 	
@@ -95,7 +95,7 @@ class TxtNumbers
 		var res = Bytes.alloc(size);
 		var count = 0;
 		while (count < size) {
-			var s = NumberToText(Math.floor(Math.random() * 999999));
+			var s = numberToText(Math.floor(Math.random() * 999999));
 			var buf = Bytes.ofString(s);
 			var x = (buf.length <= size - count) ? buf.length : size - count;
 			res.blit(count, buf, 0,  x);
@@ -108,7 +108,7 @@ class TxtNumbers
 		var res = Bytes.alloc(size);
 		var count = 0;
 		if (value < 0) value = Math.floor(Math.random() * 999999);
-		var s = NumberToText(value);
+		var s = numberToText(value);
 		var buf = Bytes.ofString(s);
 		while (count < size) {
 			var x = (buf.length <= size - count) ? buf.length : size - count;

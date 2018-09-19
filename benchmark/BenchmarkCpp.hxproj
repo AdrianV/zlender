@@ -12,6 +12,7 @@
     <movie minorVersion="0" />
     <movie platform="C++" />
     <movie background="#FFFFFF" />
+    <movie preferredSDK="Haxe 4 test;4.0;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
