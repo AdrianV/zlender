@@ -79,37 +79,46 @@ class Compress
 		var kx: Int32 = data_buf.fastGet(0);
 		var freepos = 256;
 		for (ix in 1...data.length) {
-			var x = data_buf.fastGet(ix);
-			var hash = ((kx & 0xFFFF) * 31 + x) & (hash_size -1);
-			kx = ((kx << 16) | x); 
+			final x = data_buf.fastGet(ix);
+			//kx = (kx & 0xFFFF);
+			//var hash = ((kx << 5) - kx + x) & (hash_size - 1);  // most compilers do this opt anyway
+			//final hash = ((kx & 0xFFFF) * 31 + x) & (hash_size -1);
+			final hash = (((kx) * 113) + x) & (hash_size - 1);
 			var y = son[hash];
-			while ((y != _empty) && (tab[y - 256] != kx)) {
-			  y = tab_link[y-256];
-			}
-			if (y != _empty) {
-			  kx = y;
-			} else {
-				bitbuffer = ((bitbuffer << codelen) | (kx >>> 16)); 
-				countbits += codelen;
-				if (countbits >= 16) {
-					countbits -= 16;
-					if (xOut >= eOut) {
-						return Original(data);
+			kx = ((kx << 16) | x); 
+			do {
+				if (y != _empty) {
+					if (tab[y - 256] != kx) {
+						y = tab_link[y-256];
+						continue;
+					} else {
+						kx = y;
+						break;
 					}
-					res.setUInt16(xOut, bitbuffer >>> countbits);
-					xOut += 2;
-				}
-				if (freepos <= compress_size) {
-					tab[freepos - 256] = kx;
-					tab_link[freepos - 256] = son[hash];
-					son[hash] = freepos;
-					freepos++;
-					if (freepos == trigger) {
-						codelen++;
-						trigger = ((trigger & 0xFFFFFFF0) << 1) + 1;
+				} else {
+					bitbuffer = ((bitbuffer << codelen) | (kx >>> 16)); 
+					countbits += codelen;
+					if (countbits >= 16) {
+						countbits -= 16;
+						if (xOut >= eOut) {
+							return Original(data);
+						}
+						res.setUInt16(xOut, bitbuffer >>> countbits);
+						xOut += 2;
 					}
+					if (freepos <= compress_size) {
+						tab[freepos - 256] = kx;
+						tab_link[freepos - 256] = son[hash];
+						son[hash] = freepos;
+						freepos++;
+						if (freepos == trigger) {
+							codelen++;
+							trigger = ((trigger & 0xFFFFFFF0) << 1) + 1;
+						}
+					}
+					break;
 				}
-			}
+			} while (true);
 		}
 		bitbuffer = ((bitbuffer << codelen) | (kx & 0xFFFF)); 
 		countbits+= codelen;
