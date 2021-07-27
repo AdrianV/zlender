@@ -66,6 +66,7 @@ class Compress
 		var trigger = 0x201;
 		var son = new haxe.ds.Vector<Int>(hash_size); 
 		var res = Bytes.alloc(data.length);
+		res.set(data.length >> 4, 0);
 		res.setUInt16(2, data.length);
 		var xOut = 4;
 		#if bigbuffer
@@ -136,15 +137,15 @@ class Compress
 		if (countbits != 0) {
 			res.setUInt16(xOut, bitbuffer << (16-countbits));
 			if (countbits <= 8) {
-			  kx++;
+				kx++;
 			} else
-			  kx += 2;
+				kx += 2;
 		}
 		res.setUInt16(0, kx);
 		kx += (kx & 1);
-		var result = Bytes.alloc(kx);
-		result.blit(0, res, 0, kx);
-		return Compressed(result);
+		//var result = Bytes.alloc(kx);
+		//result.blit(0, res, 0, kx);
+		return Compressed(res.sub(0, kx));
 	}
 	
 	static public function expand(buf: CompressedBytes): Bytes {
